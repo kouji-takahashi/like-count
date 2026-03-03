@@ -23,25 +23,29 @@ export function useLikes(pageId) {
     fetchCount();
   }, [pageId]);
 
-  const like = async () => {
+const like = async () => {
     if (liked) return;
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('likes')
       .select('count')
       .eq('page_id', pageId)
       .single();
 
+    console.log('fetch result:', data, error);
+
     if (data) {
-      await supabase
+      const { error: updateError } = await supabase
         .from('likes')
         .update({ count: data.count + 1 })
         .eq('page_id', pageId);
+      console.log('update error:', updateError);
       setCount(data.count + 1);
     } else {
-      await supabase
+      const { error: insertError } = await supabase
         .from('likes')
         .insert({ page_id: pageId, count: 1 });
+      console.log('insert error:', insertError);
       setCount(1);
     }
     setLiked(true);
