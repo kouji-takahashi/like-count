@@ -16,7 +16,7 @@ export function useLikes(pageId) {
         .from('likes')
         .select('count')
         .eq('page_id', pageId)
-        .single();
+        .maybeSingle();
 
       if (data) setCount(data.count);
     };
@@ -30,7 +30,7 @@ const like = async () => {
       .from('likes')
       .select('count')
       .eq('page_id', pageId)
-      .single();
+      .maybeSingle();
 
     console.log('fetch result:', data, error);
 
